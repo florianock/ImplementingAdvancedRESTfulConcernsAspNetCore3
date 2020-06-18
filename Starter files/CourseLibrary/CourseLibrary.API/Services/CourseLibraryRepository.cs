@@ -120,7 +120,7 @@ namespace CourseLibrary.API.Services
 
         public IEnumerable<Author> GetAuthors()
         {
-            return _context.Authors.ToList<Author>();
+            return _context.Authors.ToList();
         }
 
         public IEnumerable<Author> GetAuthors(AuthorsResourceParameters authorsResourceParameters)
@@ -128,12 +128,6 @@ namespace CourseLibrary.API.Services
             if (authorsResourceParameters == null)
             {
                 throw new ArgumentNullException(nameof(authorsResourceParameters));
-            }
-
-            if (string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory)
-                 && string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
-            {
-                return GetAuthors();
             }
 
             var collection = _context.Authors as IQueryable<Author>;
@@ -146,14 +140,16 @@ namespace CourseLibrary.API.Services
 
             if (!string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
             {
-
                 var searchQuery = authorsResourceParameters.SearchQuery.Trim();
                 collection = collection.Where(a => a.MainCategory.Contains(searchQuery)
                     || a.FirstName.Contains(searchQuery)
                     || a.LastName.Contains(searchQuery));
             }
 
-            return collection.ToList();
+            return collection
+                .Skip(authorsResourceParameters.PageSize * (authorsResourceParameters.PageNumber - 1))
+                .Take(authorsResourceParameters.PageSize)
+                .ToList();
         }
 
         public IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds)
