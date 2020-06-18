@@ -91,6 +91,9 @@ namespace CourseLibrary.API
                 };
             });
 
+            // register PropertyMappingService
+            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
+            
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<ICourseLibraryRepository, CourseLibraryRepository>();
@@ -119,7 +122,6 @@ namespace CourseLibrary.API
                         await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
                     });
                 });
-
             }
 
             app.UseRouting();
