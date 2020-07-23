@@ -11,6 +11,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CourseLibrary.API.Entities;
+using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 
 namespace CourseLibrary.API.Controllers
@@ -23,12 +24,14 @@ namespace CourseLibrary.API.Controllers
         private readonly IMapper _mapper;
         private readonly IPropertyMappingService _propertyMappingService;
         private readonly IPropertyCheckerService _propertyCheckerService;
+        private readonly ILogger<AuthorsController> _logger;
 
         public AuthorsController(
             ICourseLibraryRepository courseLibraryRepository,
             IMapper mapper, 
             IPropertyMappingService propertyMappingService,
-            IPropertyCheckerService propertyCheckerService)
+            IPropertyCheckerService propertyCheckerService,
+            ILogger<AuthorsController> logger)
         {
             _courseLibraryRepository = courseLibraryRepository ??
                 throw new ArgumentNullException(nameof(courseLibraryRepository));
@@ -38,6 +41,8 @@ namespace CourseLibrary.API.Controllers
                 throw new ArgumentNullException(nameof(propertyMappingService));
             _propertyCheckerService = propertyCheckerService ??
                 throw new ArgumentNullException(nameof(propertyCheckerService));
+            _logger = logger ??
+                throw new ArgumentNullException(nameof(logger));
         }
 
         [HttpGet(Name = "GetAuthors")]

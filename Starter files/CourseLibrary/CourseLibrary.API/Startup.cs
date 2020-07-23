@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using System;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Serilog;
 
 namespace CourseLibrary.API
 {
@@ -27,7 +29,9 @@ namespace CourseLibrary.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(setupAction =>
+            services.Configure<KestrelServerOptions>(
+                    Configuration.GetSection("Kestrel"))
+            .AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
 
@@ -127,6 +131,8 @@ namespace CourseLibrary.API
                 });
             }
 
+            app.UseSerilogRequestLogging();
+            
             app.UseRouting();
 
             app.UseAuthorization();
