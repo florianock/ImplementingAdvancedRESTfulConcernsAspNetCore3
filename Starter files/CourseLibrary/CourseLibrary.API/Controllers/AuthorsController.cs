@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using CourseLibrary.API.Entities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
+using Serilog;
 
 namespace CourseLibrary.API.Controllers
 {
@@ -25,13 +26,15 @@ namespace CourseLibrary.API.Controllers
         private readonly IPropertyMappingService _propertyMappingService;
         private readonly IPropertyCheckerService _propertyCheckerService;
         private readonly ILogger<AuthorsController> _logger;
+        private readonly IDiagnosticContext _diagnosticContext;
 
         public AuthorsController(
             ICourseLibraryRepository courseLibraryRepository,
             IMapper mapper, 
             IPropertyMappingService propertyMappingService,
             IPropertyCheckerService propertyCheckerService,
-            ILogger<AuthorsController> logger)
+            ILogger<AuthorsController> logger,
+            IDiagnosticContext diagnosticContext)
         {
             _courseLibraryRepository = courseLibraryRepository ??
                 throw new ArgumentNullException(nameof(courseLibraryRepository));
@@ -43,6 +46,8 @@ namespace CourseLibrary.API.Controllers
                 throw new ArgumentNullException(nameof(propertyCheckerService));
             _logger = logger ??
                 throw new ArgumentNullException(nameof(logger));
+            _diagnosticContext = diagnosticContext ??
+                throw new ArgumentNullException(nameof(diagnosticContext));
         }
 
         [HttpGet(Name = "GetAuthors")]
@@ -59,6 +64,8 @@ namespace CourseLibrary.API.Controllers
             {
                 return BadRequest();
             }
+
+            _diagnosticContext.Set("Florian", "True");
             
             var authorsFromRepo = _courseLibraryRepository.GetAuthors(authorsResourceParameters);
 

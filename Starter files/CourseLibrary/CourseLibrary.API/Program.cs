@@ -15,12 +15,15 @@ namespace CourseLibrary.API
 
         public static void Main(string[] args)
         {
-            // Added logging following this tutorial:
+            // Added logging following these sources:
             // https://nblumhardt.com/2019/10/serilog-in-aspnetcore-3/
+            // https://github.com/serilog/serilog-aspnetcore
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
+                .WriteTo.File("bla.txt")
                 // .WriteTo.Seq(
                 //     Environment.GetEnvironmentVariable("SEQ_URL") ?? "http://localhost:5341")
                 .CreateLogger();
