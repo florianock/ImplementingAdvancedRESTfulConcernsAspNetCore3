@@ -54,7 +54,7 @@ namespace CourseLibrary.API.Helpers
 
                 if (propertyMappingValue == null)
                 {
-                    throw new ArgumentNullException("propertyMappingValue");
+                    throw new ArgumentNullException(null, "propertyMappingValue");
                 }
                 
                 // revert sort order if necessary

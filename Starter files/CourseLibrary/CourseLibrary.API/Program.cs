@@ -6,7 +6,6 @@ using Microsoft.Extensions.Hosting;
 using System;
 using Serilog;
 using Serilog.Events;
-using Serilog.Formatting.Compact;
 
 namespace CourseLibrary.API
 {

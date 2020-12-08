@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CourseLibrary.API.Entities;
-using CourseLibrary.API.Models;
 
 namespace CourseLibrary.API.Services
 {
@@ -21,7 +19,7 @@ namespace CourseLibrary.API.Services
 
         public PropertyMappingService()
         {
-            _propertyMappings.Add(new PropertyMapping<AuthorDto, Author>(_authorPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping(_authorPropertyMapping));
         }
 
         public bool ValidMappingExistsFor<TSource, TDestination>(string fields)
@@ -45,7 +43,7 @@ namespace CourseLibrary.API.Services
                 // remove everything after the first " " - if the fields
                 // are coming from an orderBy string, this part must be
                 // ignored
-                var indexOfFirstSpace = trimmedField.IndexOf(" ");
+                var indexOfFirstSpace = trimmedField.IndexOf(" ", StringComparison.InvariantCultureIgnoreCase);
                 var propertyName = indexOfFirstSpace == -1 ? trimmedField : trimmedField.Remove(indexOfFirstSpace);
                 
                 // find the matching property
@@ -62,12 +60,12 @@ namespace CourseLibrary.API.Services
         {
             // get matching mapping
             var matchingMapping = _propertyMappings
-                .OfType<PropertyMapping<TSource, TDestination>>()
+                .OfType<PropertyMapping>()
                 .ToList();
 
             if (matchingMapping.Count == 1)
             {
-                return matchingMapping.First()._mappingDictionary;
+                return matchingMapping.First().MappingDictionary;
             }
             
             throw new Exception($"Cannot find exact property mapping instance " +

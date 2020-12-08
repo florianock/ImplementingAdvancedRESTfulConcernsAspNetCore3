@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 namespace CourseLibrary.API.Controllers
@@ -41,9 +40,11 @@ namespace CourseLibrary.API.Controllers
                 return BadRequest();
             }
 
-            var authorEntities = _courseLibraryRepository.GetAuthors(ids);
+            var idsList = ids.ToList();
 
-            if (ids.Count() != authorEntities.Count())
+            var authorEntities = _courseLibraryRepository.GetAuthors(idsList);
+
+            if (idsList.Count != authorEntities.Count())
             {
                 return NotFound();
             }
