@@ -20,10 +20,10 @@ namespace CourseLibrary.API
             // https://github.com/serilog/serilog-aspnetcore
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
-                .WriteTo.File("bla.txt")
+                // .WriteTo.File("bla.txt")
                 // .WriteTo.Seq(
                 //     Environment.GetEnvironmentVariable("SEQ_URL") ?? "http://localhost:5341")
                 .CreateLogger();
