@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Data;
 using Serilog;
 using Serilog.Events;
 
@@ -35,6 +36,9 @@ namespace CourseLibrary.API
                 using (var scope = host.Services.CreateScope())
                 {
                     var context = scope.ServiceProvider.GetService<CourseLibraryContext>();
+
+                    if (context == null) throw new DataException($"Missing Database context; {nameof(CourseLibraryContext)}");
+                    
                     // for demo purposes, delete the database & migrate on startup so 
                     // we can start with a clean slate
                     context.Database.EnsureDeleted();
