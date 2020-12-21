@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Data;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.EntityFrameworkCore.Storage;
 using Serilog;
 using Serilog.Events;
 
@@ -61,9 +63,19 @@ namespace CourseLibrary.API
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseSerilog()
+                .ConfigureServices((context, services) =>
+                {
+                    services.Configure<KestrelServerOptions>(
+                        context.Configuration.GetSection("Kestrel"));
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.ConfigureKestrel(serverOptions =>
+                        {
+                            serverOptions.Limits.Http2.KeepAlivePingDelay = TimeSpan.FromSeconds(30);
+                            serverOptions.Limits.Http2.KeepAlivePingTimeout = TimeSpan.FromSeconds(60);
+                        })
+                        .UseStartup<Startup>();
                 });
     }
 }

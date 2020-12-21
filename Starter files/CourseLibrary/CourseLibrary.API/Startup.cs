@@ -7,35 +7,24 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Serilog;
 
 namespace CourseLibrary.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddResponseCaching();
             
-            services.Configure<KestrelServerOptions>(
-                    Configuration.GetSection("Kestrel"))
-            .AddControllers(setupAction =>
+            services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
                 setupAction.CacheProfiles.Add("240SecondsCacheProfile",
@@ -126,6 +115,8 @@ namespace CourseLibrary.API
                 options.UseSqlServer(
                     @"Server=(localdb)\mssqllocaldb;Database=CourseLibraryDB;Trusted_Connection=True;");
             });
+            
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -145,8 +136,11 @@ namespace CourseLibrary.API
                         await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
                     });
                 });
+                app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
+            
             app.UseSerilogRequestLogging();
 
             app.UseResponseCaching();

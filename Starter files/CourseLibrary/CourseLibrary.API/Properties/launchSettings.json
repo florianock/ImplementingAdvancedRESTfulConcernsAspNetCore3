@@ -4,7 +4,7 @@
     "CourseLibrary.API": {
       "commandName": "Project",
       "launchBrowser": false,
-      "applicationUrl": "http://localhost:51044",
+      "applicationUrl": "https://localhost:51044",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
