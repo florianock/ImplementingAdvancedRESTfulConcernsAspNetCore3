@@ -74,6 +74,11 @@ namespace CourseLibrary.API
                         {
                             serverOptions.Limits.Http2.KeepAlivePingDelay = TimeSpan.FromSeconds(30);
                             serverOptions.Limits.Http2.KeepAlivePingTimeout = TimeSpan.FromSeconds(60);
+                            serverOptions.ListenLocalhost(51044, listenOptions =>
+                            {
+                                listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                                listenOptions.UseHttps();
+                            });
                         })
                         .UseStartup<Startup>();
                 });

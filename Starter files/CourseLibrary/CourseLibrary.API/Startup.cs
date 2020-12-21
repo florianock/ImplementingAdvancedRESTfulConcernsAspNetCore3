@@ -24,7 +24,11 @@ namespace CourseLibrary.API
         {
             services.AddResponseCaching();
             
-            services.AddControllers(setupAction =>
+            services.AddHttpsRedirection(options =>
+            {
+                options.HttpsPort = 51044;
+            })
+            .AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
                 setupAction.CacheProfiles.Add("240SecondsCacheProfile",
